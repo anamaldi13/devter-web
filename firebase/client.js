@@ -16,13 +16,16 @@ const firebaseConfig = {
 // Inicializar la app
 !firebase.apps.length && firebase.initializeApp(firebaseConfig);
 
+const database = firebase.firestore();
+
 const mapUserFromFirebaseAuth = (user) => {
   console.log(user);
-  const { email, photoURL, displayName } = user;
+  const { email, photoURL, displayName, uid } = user;
   return {
     avatar: photoURL,
     username: displayName,
     email,
+    uid,
   };
 };
 
@@ -40,4 +43,38 @@ export const loginWithGitHub = () => {
   // Cuando se inicia sesión automaticamente se ejecuta el onAuthstateChanged
   // por lo que no hace falta llamarlo manualmente
   /* .then(mapUserFromFirebaseAuthToUser) */
+};
+
+export const addDevit = ({ avatar, content, userId, username }) => {
+  return database.collection("devits").add({
+    avatar,
+    content,
+    userId,
+    username,
+    createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+    likesCount: 0,
+    sharedCount: 0,
+  });
+};
+
+export const fetchLatestDevits = () => {
+  return database
+    .collection("devits")
+    .get()
+    .then(({ docs }) => {
+      // devuelve una Promesa
+      /* el docs es la collecion de devits */
+      return docs.map((doc) => {
+        // extrae todos los campos, y lo tendremos como objeto
+        const data = doc.data();
+        const id = doc.id;
+        const { createdAt } = data;
+        return {
+          ...data,
+          id,
+          createdAt:
+            +createdAt.toDate() /*  (+) Nos lo transforma en un número */,
+        };
+      });
+    });
 };

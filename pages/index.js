@@ -1,27 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import AppLayout from "../components/AppLayout";
 import Button from "../components/Button";
-import Avatar from "../components/Avatar/index";
 
-import { loginWithGitHub, onAuthStateChanged } from "../firebase/client";
+import { loginWithGitHub } from "../firebase/client";
 
 import { colors } from "../styles/theme";
 import styles from "../styles/Home.module.css";
+import { useRouter } from "next/router";
+
+import useUser, { USER_STATES } from "../hooks/useUser";
 
 export default function Home() {
-  const [user, setUser] = useState(undefined);
+  const user = useUser();
+  const router = useRouter();
 
+  /* Cuando se modifique el usuario, creamos una redireccion a /inicio con el Router 
+  Si es un usuario ya logueado te redirecciona a la home */
   useEffect(() => {
-    onAuthStateChanged(setUser);
-  }, []);
+    user && router.replace("/inicio");
+  }, [user]);
 
   const handleClick = () => {
-    loginWithGitHub()
-      .then(setUser)
-      .catch((err) => {
-        console.log(err);
-      });
+    loginWithGitHub().catch((err) => {
+      console.log(err);
+    });
   };
   return (
     <div className={styles.container}>
@@ -34,14 +37,10 @@ export default function Home() {
             with developers
           </h2>
           <div>
-            {user == null && (
+            {user === USER_STATES.NOT_LOGGED && (
               <Button onClick={handleClick}>Login with GitHub</Button>
             )}
-            {user && user.avatar && (
-              <div>
-                <Avatar src={user.avatar} alt="Foto avatar" text={user.email} />
-              </div>
-            )}
+            {user === USER_STATES.NOT_KNOW && <img src="/spinner.gif" />}
           </div>
         </section>
       </AppLayout>

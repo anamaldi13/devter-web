@@ -1,16 +1,18 @@
 import AppLayout from "../../components/AppLayout";
 import { useState, useEffect } from "react";
 import Devit from "../../components/Devit";
+import useUser from "../../hooks/useUser";
+
+import { fetchLatestDevits } from "../../firebase/client";
 
 export default function Inicio() {
   const [timelines, setTimelines] = useState([]);
+  const user =
+    useUser(); /* para no mostrarle la información si no esta logueado */
 
   useEffect(() => {
-    fetch("/api/statuses/home_timeline")
-      .then((res) => res.json())
-      .then(setTimelines);
-    console.log(timelines);
-  }, []);
+    user && fetchLatestDevits().then(setTimelines); // devuelve una promesa, por eso el Then
+  }, [user]);
 
   return (
     <>
@@ -25,7 +27,9 @@ export default function Inicio() {
                 key={devit.key}
                 username={devit.username}
                 avatar={devit.avatar}
-                message={devit.message}
+                content={devit.content}
+                userId={devit.userId}
+                createdAt={devit.createdAt}
                 id={devit.id}
               />
             );
@@ -36,7 +40,9 @@ export default function Inicio() {
       <style jsx>{`
         header {
           align-items: center;
-          border-bottom: 1px solid #ccc;
+          background: #ffffffaa;
+          backdrop-filter: blur(8px);
+          border-bottom: 1px solid #eee;
           height: 49px;
           display: flex;
           position: sticky;
@@ -47,14 +53,14 @@ export default function Inicio() {
         h2 {
           font-size: 21px;
           font-weight: 800;
+          padding-left: 15px;
         }
-        section {
-          padding-top: 49px;
-        }
+        
         nav {
           bottom: 0;
-          border-top: 1px solid #ccc;
-          height: 49px;
+          background: #fff;
+          border-top: 1px solid #eee;
+          height: 50px;
           position: sticky;
           width: 100%;
         }
