@@ -42,6 +42,8 @@ export default css`
     height: 100%;
     position: relative;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     width: 100%;
   }
 

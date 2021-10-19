@@ -1,8 +1,6 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/firestore";
-
+import * as firebase from "firebase";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 const firebaseConfig = {
   apiKey: "AIzaSyCZt-063RmBLtRsizyzDsdaBqgDJgTkJUc",
   authDomain: "devter-df1b3.firebaseapp.com",
@@ -45,7 +43,7 @@ export const loginWithGitHub = () => {
   /* .then(mapUserFromFirebaseAuthToUser) */
 };
 
-export const addDevit = ({ avatar, content, userId, username }) => {
+export const addDevit = ({ avatar, img, content, userId, username }) => {
   return database.collection("devits").add({
     avatar,
     content,
@@ -54,12 +52,14 @@ export const addDevit = ({ avatar, content, userId, username }) => {
     createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
     likesCount: 0,
     sharedCount: 0,
+    img,
   });
 };
 
 export const fetchLatestDevits = () => {
   return database
     .collection("devits")
+    .orderBy("createdAt", "desc")
     .get()
     .then(({ docs }) => {
       // devuelve una Promesa
@@ -77,4 +77,10 @@ export const fetchLatestDevits = () => {
         };
       });
     });
+};
+
+export const uploadImage = (file) => {
+  const ref = firebase.storage().ref(`images/${file.name}`);
+  const task = ref.put(file);
+  return task;
 };
