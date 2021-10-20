@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 
-import AppLayout from "../components/AppLayout";
 import Button from "../components/Button";
 
 import { loginWithGitHub } from "../firebase/client";
@@ -28,22 +27,20 @@ export default function Home() {
   };
   return (
     <div className={styles.container}>
-      <AppLayout>
-        <section>
-          <img src="/logo-twitter.png" />
-          <h1>DEVTER!</h1>
-          <h2>
-            Talk about development <br />
-            with developers
-          </h2>
-          <div>
-            {user === USER_STATES.NOT_LOGGED && (
-              <Button onClick={handleClick}>Login with GitHub</Button>
-            )}
-            {user === USER_STATES.NOT_KNOW && <img src="/spinner.gif" />}
-          </div>
-        </section>
-      </AppLayout>
+      <section>
+        <img src="/logo-twitter.png" />
+        <h1>DEVTER!</h1>
+        <h2>
+          Talk about development <br />
+          with developers
+        </h2>
+        <div>
+          {user === USER_STATES.NOT_LOGGED && (
+            <Button onClick={handleClick}>Login with GitHub</Button>
+          )}
+          {user === USER_STATES.NOT_KNOW && <img src="/spinner.gif" />}
+        </div>
+      </section>
 
       <style jsx>
         {`

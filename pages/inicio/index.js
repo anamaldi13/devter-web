@@ -1,4 +1,3 @@
-import AppLayout from "../../components/AppLayout";
 import { useState, useEffect } from "react";
 import Devit from "../../components/Devit";
 import useUser from "../../hooks/useUser";
@@ -20,31 +19,29 @@ export default function Inicio() {
 
   return (
     <>
-      <AppLayout>
-        <Head>
-          <title>Inicio / Devter</title>
-        </Head>
-        <header>
-          <h2>Inicio</h2>
-        </header>
-        <section>
-          {timelines.map((devit) => {
-            return (
-              <Devit
-                key={devit.key}
-                username={devit.username}
-                avatar={devit.avatar}
-                content={devit.content}
-                userId={devit.userId}
-                createdAt={devit.createdAt}
-                id={devit.id}
-                img={devit.img}
-              />
-            );
-          })}
-        </section>
-        <NavBar />
-      </AppLayout>
+      <Head>
+        <title>Inicio / Devter</title>
+      </Head>
+      <header>
+        <h2>Inicio</h2>
+      </header>
+      <section>
+        {timelines.map((devit) => {
+          return (
+            <Devit
+              key={devit.key}
+              username={devit.username}
+              avatar={devit.avatar}
+              content={devit.content}
+              userId={devit.userId}
+              createdAt={devit.createdAt}
+              id={devit.id}
+              img={devit.img}
+            />
+          );
+        })}
+      </section>
+      <NavBar />
       <style jsx>{style}</style>
     </>
   );
